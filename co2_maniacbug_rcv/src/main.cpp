@@ -141,7 +141,8 @@ static void vPrintTask ( void *pvParameter ){
 				Serial.print(F(","));
 				Serial.print(resHum.usVal);
 				Serial.print(F(","));
-				Serial.println(resLight);
+				Serial.print(resLight);
+				Serial.println(F(","));
 
 				resTemp.ucStatus = false;
 				resCO2.ucStatus = false;
@@ -199,7 +200,7 @@ static void vTaskRoute(void* pvParameter)
 			Serial.print(payload.co2); Serial.print(F(","));
 			Serial.print(payload.temperature); Serial.print(F(","));
 			Serial.print(payload.humidity); Serial.print(F(","));
-			Serial.print(payload.light); Serial.println();
+			Serial.print(payload.light); Serial.println(",");
 		}
 		xTaskResumeAll();
 		vTaskDelay((TickType_t) 100*portTICK_PERIOD_MS);
@@ -221,7 +222,7 @@ void setup(void)
 	SPI.begin();
 	radio.begin();
 	network.begin(/*channel*/ 90, /*node address*/ addr);
-	
+
 	// TODO: set power level radio sesuai kebutuhan
 	radio.setPALevel(RF24_PA_MIN);
 

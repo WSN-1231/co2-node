@@ -175,7 +175,8 @@ static void vPrintTask ( void *pvParameter ){
 				Serial.print(F(","));
 				Serial.print(resHum.usVal);
 				Serial.print(F(","));
-				Serial.println(resLight);
+				Serial.print(resLight);
+				Serial.println(F(","));
 
 				resTemp.ucStatus = false;
 				resCO2.ucStatus = false;
