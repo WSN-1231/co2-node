@@ -281,7 +281,7 @@ void setup(void)
 	radio.begin();
 	network.begin(/*channel*/ 90, /*node address*/ addr);
 
-	radio.setPALevel(RF24_PA_MIN);
+	radio.setPALevel(RF24_PA_LOW);
 
 	// radio initialization
 	radio.printDetails();

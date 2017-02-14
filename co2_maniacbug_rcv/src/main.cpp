@@ -224,7 +224,7 @@ void setup(void)
 	network.begin(/*channel*/ 90, /*node address*/ addr);
 
 	// TODO: set power level radio sesuai kebutuhan
-	radio.setPALevel(RF24_PA_MIN);
+	radio.setPALevel(RF24_PA_LOW);
 
 	// initialize semaphore
 	// TODO: enable mutex usage
