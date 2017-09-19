@@ -281,7 +281,10 @@ void setup(void)
 	radio.begin();
 	network.begin(/*channel*/ 90, /*node address*/ addr);
 
-	radio.setPALevel(RF24_PA_LOW);
+	// set power level, maksimal
+	radio.setPALevel(RF24_PA_MAX);
+	// set data rate, 250K
+	radio.setDataRate(RF24_250KBPS);
 
 	// radio initialization
 	radio.printDetails();
