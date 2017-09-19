@@ -272,7 +272,7 @@ static void vTaskRoute(void* pvParameter)
 void setup(void)
 {
 	EEPROM.begin();
-	digitalWrite(LED_BUILTIN, LOW);
+	digitalWrite(LED_BUILTIN , LOW);
 	// ambil alamat node
 	addr = (EEPROM.read(0x0ffe) << 8) | EEPROM.read(0x0fff);
 
