@@ -192,6 +192,7 @@ static void vTaskRoute(void* pvParameter)
 
 		if(network.available())
 		{
+			digitalWrite(LED_BUILTIN, HIGH);
 			payload_t payload;
 			RF24NetworkHeader header;
 			bool ok = network.read(header, &payload, sizeof(payload));
@@ -201,6 +202,7 @@ static void vTaskRoute(void* pvParameter)
 			Serial.print(payload.temperature); Serial.print(F(","));
 			Serial.print(payload.humidity); Serial.print(F(","));
 			Serial.print(payload.light); Serial.println(",");
+			digitalWrite(LED_BUILTIN, LOW);
 		}
 		xTaskResumeAll();
 		vTaskDelay((TickType_t) 100*portTICK_PERIOD_MS);
@@ -217,14 +219,16 @@ void setup(void)
 	sws.begin(9600);
 	printf_begin();
 	Serial.begin(57600);
-	// printf("RF24Network/examples/helloworld_tx/");
+	Serial.print("Node address: "); Serial.println(addr, OCT);
 
 	SPI.begin();
 	radio.begin();
 	network.begin(/*channel*/ 90, /*node address*/ addr);
 
-	// TODO: set power level radio sesuai kebutuhan
-	radio.setPALevel(RF24_PA_LOW);
+	// set power level, maksimal
+	radio.setPALevel(RF24_PA_MAX);
+	// set data rate, 250K
+	radio.setDataRate(RF24_250KBPS);
 
 	// initialize semaphore
 	// TODO: enable mutex usage
