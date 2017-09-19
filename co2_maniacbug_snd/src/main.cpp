@@ -229,11 +229,12 @@ static void vTaskRoute(void* pvParameter)
 	{
 		network.update();
 		vTaskSuspendAll();
-		payload_t payload = {0, resTemp.usVal, resCO2.ulCO2Val, resHum.usVal, resLight, 0};
+			payload_t payload = {0, resTemp.usVal, resCO2.ulCO2Val, resHum.usVal, resLight, 0};
 		xTaskResumeAll();
 
 		if(network.available())
 		{
+			digitalWrite(LED_BUILTIN, HIGH);
 			payload_t payload;
 			RF24NetworkHeader header;
 			bool ok = network.read(header, &payload, sizeof(payload));
@@ -244,6 +245,7 @@ static void vTaskRoute(void* pvParameter)
 				// rebroadcast packet
 				ok = network.write(header, &payload, sizeof(payload));
 			}
+			digitalWrite(LED_BUILTIN, LOW);
 		}
 
 		// proses routing selesai, lakukan pengiriman data sendiri
@@ -258,8 +260,10 @@ static void vTaskRoute(void* pvParameter)
 		RF24NetworkHeader header;
 		header.to_node = SINK_ADDR;
 		// printf("packet destination: %d\n\r", header.to_node);
+		digitalWrite(LED_BUILTIN, HIGH);
 		bool ok = network.write(header, &payload, sizeof(payload));
 		vPrintTask(NULL);
+		digitalWrite(LED_BUILTIN, LOW);
 		vTaskDelay((TickType_t)1000*portTICK_PERIOD_MS);
 	}
 }
@@ -268,6 +272,7 @@ static void vTaskRoute(void* pvParameter)
 void setup(void)
 {
 	EEPROM.begin();
+	digitalWrite(LED_BUILTIN, LOW);
 	// ambil alamat node
 	addr = (EEPROM.read(0x0ffe) << 8) | EEPROM.read(0x0fff);
 
@@ -299,7 +304,7 @@ void setup(void)
 	// if ((sem_time = xSemaphoreCreateBinary()) == NULL)
 	// 	printf("Time semaphore failed to initialize\n\r");
 
-	printf("Node address: %d\n\r", addr);
+	Serial.print("Node address: "); Serial.println(addr, OCT);
 
 	// node_type = NODE_SINK;
 
