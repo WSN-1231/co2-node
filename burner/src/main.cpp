@@ -1,6 +1,9 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 
+// format alamat dalam big endian
+#define NEW_ADDRESS 01
+
 int address = 00;
 
 void setup()
@@ -10,25 +13,18 @@ void setup()
 	// Serial.setTimeout(500000);
 	Serial.begin(9600);
 	Serial.print("Current address: "); Serial.println(address, OCT);
-	Serial.print("Enter new address: ");
-	String nums = Serial.readString();
-	// char nums_buf[15];
-	// nums.toCharArray(nums_buf, 15);
-	// address = atoi(nums_buf);
 
-	// wait for input
-	while(!Serial.available())
-		;
-
-	address = Serial.parseInt();
+	address = (uint16_t)NEW_ADDRESS;
 	Serial.print("New address is "); Serial.println(address, OCT);
-	Serial.print("Write address? (press enter to write)");
+	Serial.println("Write address? (press enter to write)");
 	while(!Serial.available())
 		;
-	EEPROM.write(0x0fff, address | 8);
-	EEPROM.write(0x0ffe, (address >> 8));
+	char addr_low = address & 0xFF;
+	char addr_high = address >> 8;
+	EEPROM.write(0x0ffe, addr_high);
+	EEPROM.write(0x0fff, addr_low);
 	Serial.print("New address: ");
-	Serial.println(((uint16_t)EEPROM.read(0x0fff) << 8) | EEPROM.read(0x0ffe), OCT);
+	Serial.println(((uint16_t)EEPROM.read(0x0ffe) << 8) | EEPROM.read(0x0fff), OCT);
 }
 
 void loop(/* arguments */) {
